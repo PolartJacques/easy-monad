@@ -1,0 +1,42 @@
+{
+  "name": "easy-monad",
+  "version": "1.0.0",
+  "description": "Friendly monads build for peoples who don't know what monads are :)",
+  "keywords": [
+    "monads",
+    "functional-programming",
+    "fp",
+    "fp-lite",
+    "either",
+    "maybe",
+    "option"
+  ],
+  "author": "Jacques Polart",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    "./either": {
+      "import": "./dist/either/either.js",
+      "types": "./dist/either/either.d.ts"
+    },
+    "./maybe": {
+      "import": "./dist/maybe/maybe.js",
+      "types": "./dist/maybe/maybe.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "pnpm check && tsup",
+    "test": "vitest",
+    "doc": "typedoc --plugin typedoc-plugin-markdown"
+  },
+  "packageManager": "pnpm@10.6.5",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typedoc": "^0.28.4",
+    "typedoc-plugin-markdown": "^4.6.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  }
+}
