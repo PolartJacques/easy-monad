@@ -111,9 +111,3 @@ getFirstChar("")
   .mapValue((value) => `first char is ${value}`) // wont run
   .getOrEsle("there is no first char"); // output : "there is no first char"
 ```
-
-📌 Why it's useful
-
-- Eliminates null/undefined bugs.
-- Makes optional values explicit and safe.
-- Keeps code clean and expressive.
