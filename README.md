@@ -85,12 +85,9 @@ const result = divide(10, 2)
 
 ## Maybe
 
-The Maybe monad helps you work safely with optional values—without worrying about null or undefined.
+The Maybe monad helps you work safely with optional values without worrying about null or undefined.
 
-It represents either:
-
-- A value that exists
-- No value
+It represents a value that may or may not be there
 
 > 🧠 Think of it like this:
 >
@@ -102,8 +99,8 @@ It represents either:
 import { maybe } from "easy-monad/maybe";
 
 function getFirstChar(input: string): Maybe<string> {
-  const firstChat = input[0]; // string | undefined
-  return maybe.fromUndefined(firstChat);
+  const firstChar = input[0]; // string | undefined
+  return maybe.fromUndefined(firstChar);
 }
 
 getFirstChar("hello world")
