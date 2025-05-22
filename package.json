@@ -16,12 +16,12 @@
   "type": "module",
   "exports": {
     "./either": {
-      "import": "./dist/either/either.js",
-      "types": "./dist/either/either.d.ts"
+      "import": "./dist/either/index.js",
+      "types": "./dist/either/index.d.ts"
     },
     "./maybe": {
-      "import": "./dist/maybe/maybe.js",
-      "types": "./dist/maybe/maybe.d.ts"
+      "import": "./dist/maybe/index.js",
+      "types": "./dist/maybe/index.d.ts"
     }
   },
   "sideEffects": false,
@@ -34,7 +34,6 @@
   "packageManager": "pnpm@10.6.5",
   "devDependencies": {
     "tsup": "^8.5.0",
-    "typedoc": "^0.28.4",
     "typedoc-plugin-markdown": "^4.6.3",
     "typescript": "^5.8.3",
     "vitest": "^3.1.3"

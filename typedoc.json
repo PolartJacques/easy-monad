@@ -1,8 +1,0 @@
-{
-  "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/either/either.types.ts", "src/maybe/maybe.types.ts"],
-  "out": "docs",
-  "excludePrivate": true,
-  "excludeInternal": true,
-  "tsconfig": "tsconfig.json"
-}

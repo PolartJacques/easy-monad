@@ -6,7 +6,7 @@ describe("maybe", () => {
     it("should map", () => {
       const result = maybe
         .fromValue(42)
-        .mapIfValue((x) => x + 1)
+        .mapValue((x) => x + 1)
         .getOrElse(0);
 
       expect(result).toBe(43);
@@ -15,7 +15,7 @@ describe("maybe", () => {
     it("should auto flatmap", () => {
       const result = maybe
         .fromValue(42)
-        .mapIfValue((x) => maybe.fromValue(x + 1))
+        .mapValue((x) => maybe.fromValue(x + 1))
         .getOrElse(0);
 
       expect(result).toBe(43);
@@ -24,7 +24,7 @@ describe("maybe", () => {
     it("should not map", () => {
       const result = maybe
         .empty<number>()
-        .mapIfValue((x) => x + 1)
+        .mapValue((x) => x + 1)
         .getOrElse(0);
 
       expect(result).toBe(0);
@@ -95,7 +95,7 @@ describe("maybe", () => {
     it("should not have value", () => {
       const hasValue = maybe
         .fromValue(42)
-        .mapIfValue((_x) => maybe.empty()).hasValue;
+        .mapValue((_x) => maybe.empty()).hasValue;
 
       expect(hasValue).toBeFalsy();
     });

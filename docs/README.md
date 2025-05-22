@@ -1,5 +1,0 @@
-**easy-monad**
-
-***
-
-# Easy Monad

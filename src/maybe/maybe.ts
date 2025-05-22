@@ -14,7 +14,7 @@ type CreateMaybeProps<T> =
 const createMaybe = <T>({ hasValue, value }: CreateMaybeProps<T>): Maybe<T> => {
   const maybe: Maybe<T> = {
     [__maybeBrand]: true,
-    mapIfValue: <A>(fn: (x: T) => A | Maybe<A>): Maybe<A> => {
+    mapValue: <A>(fn: (x: T) => A | Maybe<A>): Maybe<A> => {
       if (!hasValue) {
         return maybe as unknown as Maybe<A>;
       }
@@ -43,15 +43,32 @@ const createMaybe = <T>({ hasValue, value }: CreateMaybeProps<T>): Maybe<T> => {
   return maybe;
 };
 
+/**
+ * Maybe utilities
+ */
 export const maybe = {
+  /**
+   * Create a Maybe object with a value inside
+   */
   fromValue: <T>(value: T) => createMaybe<T>({ hasValue: true, value }),
+  /**
+   * Create a Maybe object with no valuie
+   */
   empty: <T>() => createMaybe<T>({ hasValue: false, value: undefined }),
+  /**
+   * Create a Maybe object that will contain the given value if it is defined.
+   * Esle the Maybe object will contain no value.
+   */
   fromUndefined: <T>(value: T | undefined): Maybe<T> => {
     if (value === undefined) {
       return createMaybe<T>({ hasValue: false, value: undefined });
     }
     return createMaybe({ hasValue: true, value });
   },
+  /**
+   * Create a Maybe object that will contain the given value if it is not null.
+   * Esle the Maybe object will contain no value.
+   */
   fromNullable: <T>(value: T | null): Maybe<T> => {
     if (value === null) {
       return createMaybe<T>({ hasValue: false, value: undefined });

@@ -52,9 +52,18 @@ const createEither = <Error, Success>({
   return either;
 };
 
+/**
+ * either utilities
+ */
 export const either = {
-  success: <Error, Success>(value: Success) =>
-    createEither<Error, Success>({ type: "success", value }),
-  error: <Error, SUccess>(value: Error) =>
-    createEither<Error, SUccess>({ type: "error", value }),
+  /**
+   * create an either in success state with a given value
+   */
+  success: <Error, Value>(value: Value) =>
+    createEither<Error, Value>({ type: "success", value }),
+  /**
+   * create an either in error state with a given error
+   */
+  error: <Error, Value>(error: Error) =>
+    createEither<Error, Value>({ type: "error", value: error }),
 } as const;
