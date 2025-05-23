@@ -25,6 +25,9 @@
     }
   },
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "check": "tsc --noEmit",
     "build": "pnpm check && pnpm doc && tsup",
