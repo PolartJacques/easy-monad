@@ -1,3 +1,5 @@
+[![npm version](https://img.shields.io/npm/v/your-package-name.svg)](https://www.npmjs.com/package/easy-monad)
+
 # Easy-Monad
 
 Write cleaner code by focusing on what should be done rather than how it should be done.
@@ -47,6 +49,12 @@ This library simplifies the experience of working with monads. Here's what makes
 ```bash
 npm install easy-monad
 ```
+
+---
+
+# 📖 Documentation
+
+[easy-monad documentation](https://polartjacques.github.io/easy-monad/)
 
 ---
 

@@ -11,6 +11,10 @@
     "maybe",
     "option"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PolartJacques/easy-monad.git"
+  },
   "author": "Jacques Polart",
   "license": "ISC",
   "type": "module",
