@@ -1,4 +1,4 @@
-[![npm version](https://img.shields.io/npm/v/your-package-name.svg)](https://www.npmjs.com/package/easy-monad)
+[![npm version](https://img.shields.io/npm/v/easy-monad.svg)](https://www.npmjs.com/package/easy-monad)
 
 # Easy-Monad
 
