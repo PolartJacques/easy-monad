@@ -76,7 +76,7 @@ This makes it perfect for error handling without using exceptions.
 ### ✅ Basic Usage
 
 ```typescript
-import { either } from "easy-monad/either";
+import { type Either, either } from "easy-monad/either";
 
 function divide(a: number, b: number): Either<string, number> {
   if (b === 0) {
@@ -104,7 +104,7 @@ It represents a value that may or may not be there
 ### ✅ Basic Usage
 
 ```typescript
-import { maybe } from "easy-monad/maybe";
+import { Maybe, maybe } from "easy-monad/maybe";
 
 function getFirstChar(input: string): Maybe<string> {
   const firstChar = input[0]; // string | undefined
@@ -113,9 +113,9 @@ function getFirstChar(input: string): Maybe<string> {
 
 getFirstChar("hello world")
   .mapValue((value) => `first char is ${value}`)
-  .getOrEsle("there is no first char"); // output : "first char is h"
+  .getOrElse("there is no first char"); // output : "first char is h"
 
 getFirstChar("")
   .mapValue((value) => `first char is ${value}`) // wont run
-  .getOrEsle("there is no first char"); // output : "there is no first char"
+  .getOrElse("there is no first char"); // output : "there is no first char"
 ```
