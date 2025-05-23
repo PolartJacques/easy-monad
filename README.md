@@ -50,7 +50,7 @@ npm install easy-monad
 
 ---
 
-# 📚 Documentation
+# 📚 Monads
 
 ## Either
 

@@ -27,9 +27,9 @@
   "sideEffects": false,
   "scripts": {
     "check": "tsc --noEmit",
-    "build": "pnpm check && tsup",
+    "build": "pnpm check && pnpm doc && tsup",
     "test": "vitest",
-    "doc": "typedoc --plugin typedoc-plugin-markdown"
+    "doc": "typedoc"
   },
   "packageManager": "pnpm@10.6.5",
   "devDependencies": {
