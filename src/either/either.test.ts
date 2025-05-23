@@ -6,7 +6,7 @@ describe("either", () => {
     it("should map", () => {
       const result = either
         .success<string, number>(2)
-        .mapIfSuccess((x) => x * 2)
+        .mapValueIfSuccess((x) => x * 2)
         .resolveErrorIfAny(() => 0);
 
       expect(result).toBe(4);
@@ -15,7 +15,7 @@ describe("either", () => {
     it("shouldnot map", () => {
       const result = either
         .error<string, number>("error")
-        .mapIfSuccess((x) => x * 4)
+        .mapValueIfSuccess((x) => x * 4)
         .resolveErrorIfAny(() => 0);
 
       expect(result).toBe(0);
@@ -26,7 +26,7 @@ describe("either", () => {
     it("should map", () => {
       const result = either
         .error<string, string>("error")
-        .mapIfError((error) => error + " mapped")
+        .mapValueIfError((error) => error + " mapped")
         .resolveErrorIfAny((error) => error);
 
       expect(result).toBe("error mapped");
@@ -35,7 +35,7 @@ describe("either", () => {
     it("shouldnot map", () => {
       const result = either
         .success<string, string>("success")
-        .mapIfError((error) => error + " mapped")
+        .mapValueIfError((error) => error + " mapped")
         .resolveErrorIfAny((error) => error);
 
       expect(result).toBe("success");

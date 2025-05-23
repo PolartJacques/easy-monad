@@ -8,7 +8,7 @@ export type Either<Error, Success> = {
    *
    * alias for map and flatMap
    */
-  mapIfSuccess: <Success2>(
+  mapValueIfSuccess: <Success2>(
     fn: (x: Success) => Success2 | Either<Error, Success2>
   ) => Either<Error, Success2>; // both map and flatmap
   /**
@@ -16,17 +16,19 @@ export type Either<Error, Success> = {
    *
    * alias for mapLeft
    */
-  mapIfError: <Error2>(fn: (x: Error) => Error2) => Either<Error2, Success>;
+  mapValueIfError: <Error2>(
+    fn: (x: Error) => Error2
+  ) => Either<Error2, Success>;
   /**
    * Do something with the success value if any, but does not change it.
-   * If you want to change the value, use mapValue instead.
+   * If you want to change the value, use mapValueIfSuccess instead.
    *
    * alias for tap
    */
   doIfSuccess: (fn: (x: Success) => void) => Either<Error, Success>;
   /**
    * Do something with the error if any, but does not change it.
-   * If you want to change the error, use mapError instead.
+   * If you want to change the error, use mapValueIfError instead.
    *
    * alias for tapLeft
    */

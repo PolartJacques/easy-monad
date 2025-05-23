@@ -10,7 +10,7 @@ const createEither = <Error, Success>({
 }: EitherError<Error> | EitherSuccess<Success>): Either<Error, Success> => {
   const either: Either<Error, Success> = {
     [__eitherBrand]: true,
-    mapIfSuccess: <Success2>(
+    mapValueIfSuccess: <Success2>(
       fn: (x: Success) => Success2 | Either<Error, Success2>
     ): Either<Error, Success2> => {
       if (type === "error") {
@@ -25,7 +25,9 @@ const createEither = <Error, Success>({
         value: result,
       });
     },
-    mapIfError: <Error2>(fn: (x: Error) => Error2): Either<Error2, Success> => {
+    mapValueIfError: <Error2>(
+      fn: (x: Error) => Error2
+    ): Either<Error2, Success> => {
       if (type === "error") {
         return createEither<Error2, Success>({
           type: "error",

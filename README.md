@@ -86,7 +86,7 @@ function divide(a: number, b: number): Either<string, number> {
 }
 
 const result = divide(10, 2)
-  .mapIfSuccess((value) => value * 2) // multiply by two the result (if any)
+  .mapValueIfSuccess((value) => value * 2) // multiply by two the result (if any)
   .doIfError((err) => console.error("Oops:", err)) // log the error (if any)
   .resolveErrorIfAny(() => 0); // return a default value if error
 ```
