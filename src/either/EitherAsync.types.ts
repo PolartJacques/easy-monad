@@ -1,16 +1,16 @@
-import { EitherAsync } from "./eitherAsync.types.js";
+import { Either } from "./either.types.js";
 
 /**
- * Represent an uncertain state, where you can have either a value, or an error
+ * An Either monad that handle asynchrone values
  */
-export type Either<Error, Success> = {
+export type EitherAsync<Error, Success> = {
   /**
    * Transform the success value of the either, if any.
    * If the result of the mapping is another either, it will be flatten atomatically
    */
   mapValueIfSuccess: <Error2, Success2>(
     fn: (x: Success) => Success2 | Either<Error2, Success2>
-  ) => Either<Error | Error2, Success2>;
+  ) => EitherAsync<Error | Error2, Success2>;
   /**
    * Transform the success value of the either, if any, with an asynchrone operation
    * If the result of the mapping is another either, it will be flatten atomatically
@@ -23,7 +23,7 @@ export type Either<Error, Success> = {
    */
   mapValueIfError: <Error2>(
     fn: (x: Error) => Error2
-  ) => Either<Error2, Success>;
+  ) => EitherAsync<Error2, Success>;
   /**
    * Transform the error if any, with an asynchrone operation
    */
@@ -34,7 +34,7 @@ export type Either<Error, Success> = {
    * Do something with the success value if any, but does not change it.
    * If you want to change the value, use mapValueIfSuccess instead.
    */
-  doIfSuccess: (fn: (x: Success) => void) => Either<Error, Success>;
+  doIfSuccess: (fn: (x: Success) => void) => EitherAsync<Error, Success>;
   /**
    * Do something with the success value if any, but does not change it. Handle asynchrone operation.
    * If you want to change the value, use mapValueIfSuccess instead.
@@ -46,7 +46,7 @@ export type Either<Error, Success> = {
    * Do something with the error if any, but does not change it.
    * If you want to change the error, use mapValueIfError instead.
    */
-  doIfError: (fn: (x: Error) => void) => Either<Error, Success>;
+  doIfError: (fn: (x: Error) => void) => EitherAsync<Error, Success>;
   /**
    * Do something with the error if any, but does not change it. Handle asynchrone operation.
    * If you want to change the error, use mapValueIfError instead.
@@ -57,11 +57,12 @@ export type Either<Error, Success> = {
   /**
    * Generate a value from an error, or just return a default value
    */
-  resolveErrorIfAny: (fn: (x: Error) => Success) => Success;
+  resolveErrorIfAny: (fn: (x: Error) => Success) => Promise<Success>;
   /**
    * Generate a value from an error, or just return a default value. Handle asynchrone operation.
    */
   resolveErrorIfAnyAsync: (
     fn: (x: Error) => Promise<Success>
   ) => Promise<Success>;
+  toPromise: Promise<Either<Error, Success>>;
 } & { [key: symbol]: true };

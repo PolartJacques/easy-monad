@@ -1,2 +1,2 @@
 export { maybe } from "./maybe.js";
-export type { Maybe } from "./maybe.types.js";
+export type { Maybe, MaybeAsync } from "./maybe.types.js";
