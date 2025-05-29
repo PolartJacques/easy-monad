@@ -249,11 +249,39 @@ export const either = {
   /**
    * create an either in success state with a given value
    */
-  success: <Error, Value>(value: Value) =>
-    createEither<Error, Value>({ type: "success", value }),
+  success: <Error, Success>(value: Success) =>
+    createEither<Error, Success>({ type: "success", value }),
   /**
    * create an either in error state with a given error
    */
-  error: <Error, Value>(error: Error) =>
-    createEither<Error, Value>({ type: "error", value: error }),
+  error: <Error, Success>(error: Error) =>
+    createEither<Error, Success>({ type: "error", value: error }),
+  /**
+   * Create an either from a function that can throw an exeption.
+   * Either get the value or the exeption.
+   */
+  fromTryCatch: <Success>(fn: () => Success): Either<unknown, Success> => {
+    try {
+      const value = fn();
+      return createEither<unknown, Success>({ type: "success", value });
+    } catch (error) {
+      return createEither<unknown, Success>({ type: "error", value: error });
+    }
+  },
+  /**
+   * Create an either from an asynchrone function that can throw an exeption.
+   * Either get the value or the exeption.
+   */
+  fromTryCatchAsync: <Success>(
+    fn: () => Promise<Success>
+  ): EitherAsync<unknown, Success> => {
+    const $either = fn()
+      .then((value) =>
+        createEither<unknown, Success>({ type: "success", value })
+      )
+      .catch((error) =>
+        createEither<unknown, Success>({ type: "error", value: error })
+      );
+    return createEitherAsync<unknown, Success>($either);
+  },
 } as const;

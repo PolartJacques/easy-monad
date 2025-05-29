@@ -2,6 +2,38 @@ import { describe, expect, it, vi } from "vitest";
 import { either } from "./either.js";
 
 describe("either", () => {
+  describe("from try catch", () => {
+    it("should get success value", () => {
+      const result = either.fromTryCatch(() => 42).resolveErrorIfAny(() => 0);
+      expect(result).toBe(42);
+    });
+    it("should get error value", () => {
+      const result = either
+        .fromTryCatch<string>(() => {
+          throw "error";
+        })
+        .resolveErrorIfAny((x) => x as string);
+      expect(result).toBe("error");
+    });
+  });
+
+  describe("from try catch async ", () => {
+    it("should get success value", async () => {
+      const result = await either
+        .fromTryCatchAsync(async () => 42)
+        .resolveErrorIfAny(() => 0);
+      expect(result).toBe(42);
+    });
+    it("should get error value", async () => {
+      const result = await either
+        .fromTryCatchAsync<string>(async () => {
+          throw "error";
+        })
+        .resolveErrorIfAny((x) => x as string);
+      expect(result).toBe("error");
+    });
+  });
+
   describe("mapIfSuccess", () => {
     it("should map", () => {
       const result = either
