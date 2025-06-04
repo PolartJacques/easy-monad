@@ -6,14 +6,14 @@ export type Either<Error, Success> = {
    * Transform the success value of the either, if any.
    * If the result of the mapping is another either, it will be flatten atomatically
    */
-  mapValueIfSuccess: <Error2, Success2>(
+  mapValueIfSuccess: <Success2, Error2 = Error>(
     fn: (x: Success) => Success2 | Either<Error2, Success2>
   ) => Either<Error | Error2, Success2>;
   /**
    * Transform the success value of the either, if any, with an asynchrone operation
    * If the result of the mapping is another either, it will be flatten atomatically
    */
-  mapValueIfSuccessAsync: <Error2, Success2>(
+  mapValueIfSuccessAsync: <Success2, Error2 = Error>(
     fn: (
       x: Success
     ) =>
@@ -78,14 +78,14 @@ export type EitherAsync<Error, Success> = {
    * Transform the success value of the either, if any.
    * If the result of the mapping is another either, it will be flatten atomatically
    */
-  mapValueIfSuccess: <Error2, Success2>(
+  mapValueIfSuccess: <Success2, Error2 = Error>(
     fn: (x: Success) => Success2 | Either<Error2, Success2>
   ) => EitherAsync<Error | Error2, Success2>;
   /**
    * Transform the success value of the either, if any, with an asynchrone operation
    * If the result of the mapping is another either, it will be flatten atomatically
    */
-  mapValueIfSuccessAsync: <Error2, Success2>(
+  mapValueIfSuccessAsync: <Success2, Error2 = Error>(
     fn: (
       x: Success
     ) =>
