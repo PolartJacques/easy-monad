@@ -10,7 +10,7 @@ const createEither = <Error, Success>({
 }: EitherError<Error> | EitherSuccess<Success>): Either<Error, Success> => {
   const either: Either<Error, Success> = {
     [__eitherBrand]: true,
-    mapValueIfSuccess: <Success2, Error2>(
+    mapValueIfSuccess: <Error2, Success2>(
       fn: (x: Success) => Success2 | Either<Error2, Success2>
     ): Either<Error | Error2, Success2> => {
       if (type === "error") {
@@ -26,7 +26,13 @@ const createEither = <Error, Success>({
       });
     },
     mapValueIfSuccessAsync: <Error2, Success2>(
-      fn: (x: Success) => Promise<Success2 | Either<Error2, Success2>>
+      fn: (
+        x: Success
+      ) =>
+        | Promise<
+            Success2 | Either<Error2, Success2> | EitherAsync<Error2, Success2>
+          >
+        | EitherAsync<Error2, Success2>
     ): EitherAsync<Error | Error2, Success2> => {
       const $newEither = new Promise<Either<Error | Error2, Success2>>(
         async (resolve) => {
@@ -36,7 +42,7 @@ const createEither = <Error, Success>({
           }
           const newValue = await fn(value);
           if (isEither(newValue)) {
-            resolve(newValue as unknown as Either<Error | Error2, Success2>);
+            resolve(newValue);
             return;
           }
           resolve(
@@ -135,7 +141,6 @@ function createEitherAsync<Error, Success>(
   $either: Promise<Either<Error, Success>>
 ): EitherAsync<Error, Success> {
   const eitherAsync: EitherAsync<Error, Success> = {
-    [__eitherBrand]: true,
     mapValueIfSuccess: <Error2, Success2>(
       fn: (x: Success) => Success2 | Either<Error2, Success2>
     ): EitherAsync<Error | Error2, Success2> => {
@@ -148,12 +153,17 @@ function createEitherAsync<Error, Success>(
       return createEitherAsync($newEither);
     },
     mapValueIfSuccessAsync: <Error2, Success2>(
-      fn: (x: Success) => Promise<Success2 | Either<Error2, Success2>>
+      fn: (
+        x: Success
+      ) =>
+        | Promise<
+            Success2 | Either<Error2, Success2> | EitherAsync<Error2, Success2>
+          >
+        | EitherAsync<Error2, Success2>
     ): EitherAsync<Error | Error2, Success2> => {
       const $newEither = new Promise<Either<Error | Error2, Success2>>(
         async (resolve) => {
-          const newEither = await (await $either).mapValueIfSuccessAsync(fn)
-            .toPromise;
+          const newEither = await (await $either).mapValueIfSuccessAsync(fn);
           resolve(newEither);
         }
       );
@@ -175,8 +185,7 @@ function createEitherAsync<Error, Success>(
     ): EitherAsync<Error2, Success> => {
       const $newEither = new Promise<Either<Error2, Success>>(
         async (resolve) => {
-          const newEither = await (await $either).mapValueIfErrorAsync(fn)
-            .toPromise;
+          const newEither = await (await $either).mapValueIfErrorAsync(fn);
           resolve(newEither);
         }
       );
@@ -196,8 +205,7 @@ function createEitherAsync<Error, Success>(
     ): EitherAsync<Error, Success> => {
       const $newEither = new Promise<Either<Error, Success>>(
         async (resolve) => {
-          const newEither = await (await $either).doIfSuccessAsync(fn)
-            .toPromise;
+          const newEither = await (await $either).doIfSuccessAsync(fn);
           resolve(newEither);
         }
       );
@@ -217,7 +225,7 @@ function createEitherAsync<Error, Success>(
     ): EitherAsync<Error, Success> => {
       const $newEither = new Promise<Either<Error, Success>>(
         async (resolve) => {
-          const newEither = (await $either).doIfErrorAsync(fn).toPromise;
+          const newEither = await (await $either).doIfErrorAsync(fn);
           resolve(newEither);
         }
       );
@@ -237,7 +245,7 @@ function createEitherAsync<Error, Success>(
         resolve(result);
       });
     },
-    toPromise: $either,
+    ...$either,
   };
   return eitherAsync;
 }

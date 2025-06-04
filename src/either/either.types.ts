@@ -14,7 +14,13 @@ export type Either<Error, Success> = {
    * If the result of the mapping is another either, it will be flatten atomatically
    */
   mapValueIfSuccessAsync: <Error2, Success2>(
-    fn: (x: Success) => Promise<Success2 | Either<Error2, Success2>>
+    fn: (
+      x: Success
+    ) =>
+      | Promise<
+          Success2 | Either<Error2, Success2> | EitherAsync<Error2, Success2>
+        >
+      | EitherAsync<Error2, Success2>
   ) => EitherAsync<Error | Error2, Success2>;
   /**
    * Transform the error if any
@@ -80,7 +86,13 @@ export type EitherAsync<Error, Success> = {
    * If the result of the mapping is another either, it will be flatten atomatically
    */
   mapValueIfSuccessAsync: <Error2, Success2>(
-    fn: (x: Success) => Promise<Success2 | Either<Error2, Success2>>
+    fn: (
+      x: Success
+    ) =>
+      | Promise<
+          Success2 | Either<Error2, Success2> | EitherAsync<Error2, Success2>
+        >
+      | EitherAsync<Error2, Success2>
   ) => EitherAsync<Error | Error2, Success2>;
   /**
    * Transform the error if any
@@ -128,5 +140,4 @@ export type EitherAsync<Error, Success> = {
   resolveErrorIfAnyAsync: (
     fn: (x: Error) => Promise<Success>
   ) => Promise<Success>;
-  toPromise: Promise<Either<Error, Success>>;
-} & { [key: symbol]: true };
+} & Promise<Either<Error, Success>>;
