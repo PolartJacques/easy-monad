@@ -19,9 +19,7 @@ describe("either", () => {
 
   describe("from try catch async ", () => {
     it("should get success value", async () => {
-      const result = await either
-        .fromTryCatchAsync(async () => 42)
-        .resolveErrorIfAny(() => 0);
+      const result = await either.fromTryCatchAsync(async () => 42).resolveErrorIfAny(() => 0);
       expect(result).toBe(42);
     });
     it("should get error value", async () => {
@@ -124,17 +122,13 @@ describe("either", () => {
 
   describe("resolveErrorIfAny", () => {
     it("should get get success value", () => {
-      const result = either
-        .success<string, number>(42)
-        .resolveErrorIfAny(() => 0);
+      const result = either.success<string, number>(42).resolveErrorIfAny(() => 0);
 
       expect(result).toBe(42);
     });
 
     it("should get resolved error value", () => {
-      const result = either
-        .error<string, number>("error")
-        .resolveErrorIfAny(() => 0);
+      const result = either.error<string, number>("error").resolveErrorIfAny(() => 0);
 
       expect(result).toBe(0);
     });
@@ -202,9 +196,7 @@ describe("eitherAsync", () => {
 
     it("shouldnot not execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncError
-        .doIfSuccess(() => testFn())
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncError.doIfSuccess(() => testFn()).resolveErrorIfAny(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(0);
@@ -214,9 +206,7 @@ describe("eitherAsync", () => {
   describe("doIfError", () => {
     it("should execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncError
-        .doIfError(() => testFn())
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncError.doIfError(() => testFn()).resolveErrorIfAny(() => 0);
 
       expect(testFn).toHaveBeenCalled();
       expect(result).toBe(0);
@@ -224,9 +214,7 @@ describe("eitherAsync", () => {
 
     it("should not not execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncSuccess
-        .doIfError(() => testFn())
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncSuccess.doIfError(() => testFn()).resolveErrorIfAny(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(42);
