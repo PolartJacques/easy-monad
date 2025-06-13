@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { either } from "./either.js";
+import { isEither, isEitherAsync } from "./either.utils.js";
 
 describe("either", () => {
   describe("from try catch", () => {
     it("should get success value", () => {
-      const result = either.fromTryCatch(() => 42).resolveErrorIfAny(() => 0);
+      const result = either.fromTryCatch(() => 42).resolve(() => 0);
       expect(result).toBe(42);
     });
     it("should get error value", () => {
@@ -12,14 +13,14 @@ describe("either", () => {
         .fromTryCatch<string>(() => {
           throw "error";
         })
-        .resolveErrorIfAny((x) => x as string);
+        .resolve((x) => x as string);
       expect(result).toBe("error");
     });
   });
 
   describe("from try catch async ", () => {
     it("should get success value", async () => {
-      const result = await either.fromTryCatchAsync(async () => 42).resolveErrorIfAny(() => 0);
+      const result = await either.fromTryCatchAsync(async () => 42).resolve(() => 0);
       expect(result).toBe(42);
     });
     it("should get error value", async () => {
@@ -27,17 +28,17 @@ describe("either", () => {
         .fromTryCatchAsync<string>(async () => {
           throw "error";
         })
-        .resolveErrorIfAny((x) => x as string);
+        .resolve((x) => x as string);
       expect(result).toBe("error");
     });
   });
 
-  describe("mapIfSuccess", () => {
+  describe("mapOnSuccess", () => {
     it("should map", () => {
       const result = either
         .success<string, number>(2)
-        .mapValueIfSuccess((x) => x * 2)
-        .resolveErrorIfAny(() => 0);
+        .mapOnSuccess((x) => x * 2)
+        .resolve(() => 0);
 
       expect(result).toBe(4);
     });
@@ -45,10 +46,26 @@ describe("either", () => {
     it("shouldnot map", () => {
       const result = either
         .error<string, number>("error")
-        .mapValueIfSuccess((x) => x * 4)
-        .resolveErrorIfAny(() => 0);
+        .mapOnSuccess((x) => x * 4)
+        .resolve(() => 0);
 
       expect(result).toBe(0);
+    });
+
+    it("should flatten either", () => {
+      const result = either
+        .success<string, number>(42)
+        .mapOnSuccess((x) => either.success<string, number>(x));
+      expect(isEither(result)).toBe(true);
+      expect(isEitherAsync(result)).toBe(false);
+    });
+
+    it("should flatten either async", () => {
+      const result = either
+        .success<string, number>(42)
+        .mapOnSuccess((x) => either.success<string, number>(x).mapOnSuccessAsync(async (x) => x));
+      expect(isEither(result)).toBe(false);
+      expect(isEitherAsync(result)).toBe(true);
     });
   });
 
@@ -56,8 +73,8 @@ describe("either", () => {
     it("should map", () => {
       const result = either
         .error<string, string>("error")
-        .mapValueIfError((error) => error + " mapped")
-        .resolveErrorIfAny((error) => error);
+        .mapOnError((error) => error + " mapped")
+        .resolve((error) => error);
 
       expect(result).toBe("error mapped");
     });
@@ -65,20 +82,20 @@ describe("either", () => {
     it("shouldnot map", () => {
       const result = either
         .success<string, string>("success")
-        .mapValueIfError((error) => error + " mapped")
-        .resolveErrorIfAny((error) => error);
+        .mapOnError((error) => error + " mapped")
+        .resolve((error) => error);
 
       expect(result).toBe("success");
     });
   });
 
-  describe("doIfSuccess", () => {
+  describe("doOnSuccess", () => {
     it("should execute fn", () => {
       const testFn = vi.fn();
       const result = either
         .success<string, number>(42)
-        .doIfSuccess(() => testFn())
-        .resolveErrorIfAny(() => 0);
+        .doOnSuccess(() => testFn())
+        .resolve(() => 0);
 
       expect(testFn).toHaveBeenCalled();
       expect(result).toBe(42);
@@ -88,21 +105,21 @@ describe("either", () => {
       const testFn = vi.fn();
       const result = either
         .error<string, number>("Error")
-        .doIfSuccess(() => testFn())
-        .resolveErrorIfAny(() => 0);
+        .doOnSuccess(() => testFn())
+        .resolve(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(0);
     });
   });
 
-  describe("doIfError", () => {
+  describe("doOnError", () => {
     it("should execute fn", () => {
       const testFn = vi.fn();
       const result = either
         .error<string, number>("Error")
-        .doIfError(() => testFn())
-        .resolveErrorIfAny(() => 0);
+        .doOnError(() => testFn())
+        .resolve(() => 0);
 
       expect(testFn).toHaveBeenCalled();
       expect(result).toBe(0);
@@ -112,62 +129,78 @@ describe("either", () => {
       const testFn = vi.fn();
       const result = either
         .success<string, number>(42)
-        .doIfError(() => testFn())
-        .resolveErrorIfAny(() => 0);
+        .doOnError(() => testFn())
+        .resolve(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(42);
     });
   });
 
-  describe("resolveErrorIfAny", () => {
+  describe("resolve", () => {
     it("should get get success value", () => {
-      const result = either.success<string, number>(42).resolveErrorIfAny(() => 0);
+      const result = either.success<string, number>(42).resolve(0);
 
       expect(result).toBe(42);
     });
 
     it("should get resolved error value", () => {
-      const result = either.error<string, number>("error").resolveErrorIfAny(() => 0);
+      const result = either.error<string, number>("error").resolve(0);
 
       expect(result).toBe(0);
+    });
+
+    it("should get resolved error value from a function", () => {
+      const result = either.error<string, number>("error").resolve((error) => error.length);
+
+      expect(result).toBe(5);
     });
   });
 });
 
 describe("eitherAsync", () => {
-  const eitherAsyncSuccess = either
-    .success<string, number>(42)
-    .mapValueIfSuccessAsync(async (x) => x);
-  const eitherAsyncError = either
-    .error<string, number>("error")
-    .mapValueIfErrorAsync(async (x) => x);
+  const eitherAsyncSuccess = either.success<string, number>(42).mapOnSuccessAsync(async (x) => x);
+  const eitherAsyncError = either.error<string, number>("error").mapOnErrorAsync(async (x) => x);
 
-  describe("mapIfSuccess", () => {
+  describe("mapOnSuccess", () => {
     it("should map", async () => {
-      const result = await eitherAsyncSuccess
-        .mapValueIfSuccess((x) => x * 2)
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncSuccess.mapOnSuccess((x) => x * 2).resolve(() => 0);
 
       expect(result).toBe(42 * 2);
     });
 
     it("shouldnot map", async () => {
-      const result = await eitherAsyncError
-        .mapValueIfSuccess((x) => x * 4)
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncError.mapOnSuccess((x) => x * 4).resolve(() => 0);
 
       expect(result).toBe(0);
     });
+
+    it("should flatten either", async () => {
+      const fn = vi.fn();
+      await eitherAsyncSuccess
+        .mapOnSuccess((x) => either.success<string, number>(x))
+        .doOnSuccess(fn).toPromise;
+
+      expect(fn).toHaveBeenCalledWith(42);
+    });
+
+    it("should flatten eitherAsync", async () => {
+      const fn = vi.fn();
+      await eitherAsyncSuccess
+        .mapOnSuccess((x) => either.success<string, number>(x).mapOnSuccessAsync(async (x) => x))
+        .doOnSuccess(fn).toPromise;
+
+      expect(fn).toHaveBeenCalledWith(42);
+    });
   });
 
-  describe("mapIfError", () => {
+  describe("mapOnError", () => {
     it("should map", async () => {
       const result = await either
         .error<string, string>("error")
-        .mapValueIfSuccessAsync(async (x) => x) // Convert to eitherAsync
-        .mapValueIfError((error) => error + " mapped")
-        .resolveErrorIfAny((error) => error);
+        .mapOnSuccessAsync(async (x) => x) // Convert to eitherAsync
+        .mapOnError((error) => error + " mapped")
+        .resolve((error) => error);
 
       expect(result).toBe("error mapped");
     });
@@ -175,20 +208,18 @@ describe("eitherAsync", () => {
     it("shouldnot map", async () => {
       const result = await either
         .success<string, string>("success")
-        .mapValueIfSuccessAsync(async (x) => x) // convert into EitherAsync
-        .mapValueIfError((error) => error + " mapped")
-        .resolveErrorIfAny((error) => error);
+        .mapOnSuccessAsync(async (x) => x) // convert into EitherAsync
+        .mapOnError((error) => error + " mapped")
+        .resolve((error) => error);
 
       expect(result).toBe("success");
     });
   });
 
-  describe("doIfSuccess", () => {
+  describe("doOnSuccess", () => {
     it("should execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncSuccess
-        .doIfSuccess(() => testFn())
-        .resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncSuccess.doOnSuccess(() => testFn()).resolve(() => 0);
 
       expect(testFn).toHaveBeenCalled();
       expect(result).toBe(42);
@@ -196,17 +227,17 @@ describe("eitherAsync", () => {
 
     it("shouldnot not execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncError.doIfSuccess(() => testFn()).resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncError.doOnSuccess(() => testFn()).resolve(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(0);
     });
   });
 
-  describe("doIfError", () => {
+  describe("doOnError", () => {
     it("should execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncError.doIfError(() => testFn()).resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncError.doOnError(() => testFn()).resolve(() => 0);
 
       expect(testFn).toHaveBeenCalled();
       expect(result).toBe(0);
@@ -214,24 +245,27 @@ describe("eitherAsync", () => {
 
     it("should not not execute fn", async () => {
       const testFn = vi.fn();
-      const result = await eitherAsyncSuccess.doIfError(() => testFn()).resolveErrorIfAny(() => 0);
+      const result = await eitherAsyncSuccess.doOnError(() => testFn()).resolve(() => 0);
 
       expect(testFn).not.toHaveBeenCalled();
       expect(result).toBe(42);
     });
   });
 
-  describe("resolveErrorIfAny", () => {
+  describe("resolve", () => {
     it("should get get success value", async () => {
-      const result = await eitherAsyncSuccess.resolveErrorIfAny(() => 0);
-
+      const result = await eitherAsyncSuccess.resolve(0);
       expect(result).toBe(42);
     });
 
     it("should get resolved error value", async () => {
-      const result = await eitherAsyncError.resolveErrorIfAny(() => 0);
-
+      const result = await eitherAsyncError.resolve(0);
       expect(result).toBe(0);
+    });
+
+    it("should get resolved error value from function", async () => {
+      const result = await eitherAsyncError.resolve((error) => error.length);
+      expect(result).toBe(5);
     });
   });
 });

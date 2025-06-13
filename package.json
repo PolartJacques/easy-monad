@@ -1,6 +1,6 @@
 {
   "name": "easy-monad",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Friendly monads build for peoples who don't know what monads are :)",
   "keywords": [
     "monads",
