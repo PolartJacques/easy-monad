@@ -39,22 +39,18 @@ export type Either<Error, Success> = {
   mapOnErrorAsync: <Error2>(fn: (x: Error) => Promise<Error2>) => EitherAsync<Error2, Success>;
   /**
    * Do something with the success value if any, but does not change it.
-   * If you want to change the value, use mapValueIfSuccess instead.
    */
   doOnSuccess: (fn: (x: Success) => void) => Either<Error, Success>;
   /**
    * Do something with the success value if any, but does not change it. Handle asynchrone operation.
-   * If you want to change the value, use mapValueIfSuccess instead.
    */
   doOnSuccessAsync: (fn: (x: Success) => Promise<void>) => EitherAsync<Error, Success>;
   /**
    * Do something with the error if any, but does not change it.
-   * If you want to change the error, use mapValueIfError instead.
    */
   doOnError: (fn: (x: Error) => void) => Either<Error, Success>;
   /**
    * Do something with the error if any, but does not change it. Handle asynchrone operation.
-   * If you want to change the error, use mapValueIfError instead.
    */
   doOnErrorAsync: (fn: (x: Error) => Promise<void>) => EitherAsync<Error, Success>;
   /**
@@ -108,22 +104,18 @@ export type EitherAsync<Error, Success> = {
   mapOnErrorAsync: <Error2>(fn: (x: Error) => Promise<Error2>) => EitherAsync<Error2, Success>;
   /**
    * Do something with the success value if any, but does not change it.
-   * If you want to change the value, use mapValueIfSuccess instead.
    */
   doOnSuccess: (fn: (x: Success) => void) => EitherAsync<Error, Success>;
   /**
    * Do something with the success value if any, but does not change it. Handle asynchrone operation.
-   * If you want to change the value, use mapValueIfSuccess instead.
    */
   doOnSuccessAsync: (fn: (x: Success) => Promise<void>) => EitherAsync<Error, Success>;
   /**
    * Do something with the error if any, but does not change it.
-   * If you want to change the error, use mapValueIfError instead.
    */
   doOnError: (fn: (x: Error) => void) => EitherAsync<Error, Success>;
   /**
    * Do something with the error if any, but does not change it. Handle asynchrone operation.
-   * If you want to change the error, use mapValueIfError instead.
    */
   doOnErrorAsync: (fn: (x: Error) => Promise<void>) => EitherAsync<Error, Success>;
   /**
